@@ -13,8 +13,10 @@ A NestJS-based REST API for managing, streaming, and tracking music tracks. Feat
   -Stream tracks with byte-range support
 
 2, User Managment
-  -Secure login and token managment using JWT-based  signup and login
+  -Secure login and token managment using JWT-based signup and login
+
   -users can manage their profile
+  
   -users can create an artist to upload tracks 
 
 3,playlist Managment
