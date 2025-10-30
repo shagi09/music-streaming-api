@@ -12,7 +12,7 @@ A NestJS-based REST API for managing, streaming, and tracking music tracks. Feat
 ### 1. Track Management
 - Upload music tracks with metadata (genre, artist, title)
 - Display trending tracks based on play count
-- Search tracks by title or artist
+- Search tracks by title
 - Stream tracks with byte-range support for smooth playback
 
 ### 2. User Management
