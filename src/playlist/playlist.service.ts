@@ -11,6 +11,10 @@ export class PlaylistService {
     return this.playlistModel.create({ user: userId, name });
   }
 
+  async deletePlaylist(userId: string, name: string) {
+    return this.playlistModel.deleteOne({ user: userId, name });
+  }
+
   async addTrackToPlaylist( playlistId: string, trackId: string) {
     const playlist = await this.playlistModel.findById(playlistId);
     if (!playlist) {

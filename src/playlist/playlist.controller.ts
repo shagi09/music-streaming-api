@@ -1,4 +1,4 @@
-import { Body, Controller, Post,UseGuards,Get } from '@nestjs/common';
+import { Body, Controller, Post,UseGuards,Get,Delete } from '@nestjs/common';
 import { PlaylistService } from './playlist.service';
 import { addTrackToPlaylistDto, CreatePlaylistDto,removeTrackFromPlaylistDto } from './dtos/createplaylist.dto';
 import { CurrentUser } from 'decorators/user.decorator';
@@ -12,6 +12,12 @@ export class PlaylistController {
     @Post('createPlaylist')
     async createPlaylist(@CurrentUser('userId') userId: string ,@Body() dto:CreatePlaylistDto){
         return this.playlistService.create(userId,dto.name);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Delete('deletePlaylist')
+    async deletePlaylist(@CurrentUser('userId') userId: string ,@Body() dto:CreatePlaylistDto){
+        return this.playlistService.deletePlaylist(userId,dto.name);
     }
 
     //@UseGuards(JwtAuthGuard) 
