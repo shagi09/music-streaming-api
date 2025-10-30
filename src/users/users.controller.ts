@@ -10,13 +10,13 @@ import { CurrentUser } from 'decorators/user.decorator';
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-@UseGuards(JwtAuthGuard)
-@Get('me')
-async me(@CurrentUser('userId') userId: string) {
-  console.log('UserId from token:', userId);
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async me(@CurrentUser('userId') userId: string) {
+    console.log('UserId from token:', userId);
 
-  return this.usersService.findById(userId);
-}
+    return this.usersService.findById(userId);
+  }
 
 
 
