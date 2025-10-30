@@ -23,5 +23,5 @@ export class CreateTrackDto {
 
 
   @ApiProperty({ type: 'string', format: 'binary' })
-  file: any;
+  fileUrl: any;
 }

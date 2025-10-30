@@ -32,15 +32,15 @@ export class Track {
   trackNumber?: number;
 
   @Prop() // file location (S3 or internal CDN)
-  fileUrl?: string;
+  fileUrl: string;
 
-  @Prop({type: Object})
-  metadata?: {
-    bitrate?: number;
-    sampleRate?: number;
-    format?: string;
-    codec?: string;
-  };
+  // @Prop({type: Object})
+  // metadata?: {
+  //   bitrate?: number;
+  //   sampleRate?: number;
+  //   format?: string;
+  //   codec?: string;
+  // };
 }
 
 export const TrackSchema = SchemaFactory.createForClass(Track);

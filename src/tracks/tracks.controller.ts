@@ -1,4 +1,4 @@
-import { Controller,Get,Param,UseGuards,HttpException,HttpStatus } from '@nestjs/common';
+import { Controller,Get,Param,UseGuards,HttpException,HttpStatus,Req,Res } from '@nestjs/common';
 import { TracksService } from './tracks.service';
 import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -6,8 +6,7 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { Body, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { CreateTrackDto } from './dtos/create-track.dto';
-import { Req, Res } from '@nestjs/common';
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { join } from 'path';
 import { existsSync, statSync,createReadStream } from 'fs';
 
@@ -36,66 +35,66 @@ export class TracksController {
   ) {
     const track = await this.tracksService.create({
       ...CreateTrackDto,
-      file: `/uploads/tracks/${file.filename}`,
+      fileUrl: `/uploads/tracks/${file.filename}`,
     });
 
     return { message: 'Track uploaded successfully', track };
   }
 
-  @Get('list')
-  async findAll() {
-    return this.tracksService.findAll();
+    @Get('list')
+    async findAll() {
+      return this.tracksService.findAll();
+    }
+
+   @Get(':id/stream')
+  async streamTrack(
+    @Param('id') id: string,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    const track = await this.tracksService.findById(id);
+    if (!track) {
+      throw new HttpException('Track not found', HttpStatus.NOT_FOUND);
+    }
+
+    // Construct the full path
+    const filePath = join(process.cwd(), track.fileUrl);
+
+    if (!existsSync(filePath)) {
+      throw new HttpException('File not found on server', HttpStatus.NOT_FOUND);
+    }
+
+    const stat = statSync(filePath);
+    const fileSize = stat.size;
+    const range = req.headers.range;
+
+    if (range) {
+      const parts = range.replace(/bytes=/, '').split('-');
+      const start = parseInt(parts[0], 10);
+      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+
+      const chunkSize = end - start + 1;
+      const file = createReadStream(filePath, { start, end });
+
+      const head = {
+        'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+        'Accept-Ranges': 'bytes',
+        'Content-Length': chunkSize,
+        'Content-Type': 'audio/mpeg',
+      };
+
+      res.writeHead(206, head);
+      file.pipe(res);
+    } else {
+      const head = {
+        'Content-Length': fileSize,
+        'Content-Type': 'audio/mpeg',
+      };
+
+      res.writeHead(200, head);
+      createReadStream(filePath).pipe(res);
+    }
   }
-
-  //  @Get(':id/stream')
-  // async streamTrack(
-  //   @Param('id') id: string,
-  //   @Req() req: Request,
-  //   @Res() res: Response,
-  // ) {
-  //   const track = await this.tracksService.findById(+id);
-  //   if (!track) {
-  //     throw new HttpException('Track not found', HttpStatus.NOT_FOUND);
-  //   }
-
-  //   // Construct the full path
-  //   const filePath = join(process.cwd(), track.fileUrl);
-
-  //   if (!existsSync(filePath)) {
-  //     throw new HttpException('File not found on server', HttpStatus.NOT_FOUND);
-  //   }
-
-  //   const stat = statSync(filePath);
-  //   const fileSize = stat.size;
-  //   const range = req.headers.range;
-
-  //   if (range) {
-  //     const parts = range.replace(/bytes=/, '').split('-');
-  //     const start = parseInt(parts[0], 10);
-  //     const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
-
-  //     const chunkSize = end - start + 1;
-  //     const file = createReadStream(filePath, { start, end });
-
-  //     const head = {
-  //       'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-  //       'Accept-Ranges': 'bytes',
-  //       'Content-Length': chunkSize,
-  //       'Content-Type': 'audio/mpeg',
-  //     };
-
-  //     res.writeHead(206, head);
-  //     file.pipe(res);
-  //   } else {
-  //     const head = {
-  //       'Content-Length': fileSize,
-  //       'Content-Type': 'audio/mpeg',
-  //     };
-
-  //     res.writeHead(200, head);
-  //     createReadStream(filePath).pipe(res);
-  //   }
-  // }
 
 
 }

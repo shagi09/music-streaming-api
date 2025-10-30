@@ -16,8 +16,8 @@ export class TracksService {
         return this.trackModel.create(dto);
     }
 
-async findById(id: number) {
-  return this.trackModel.findOne({ where: { id } });
-}
+    async findById(id: string) {
+    return this.trackModel.findById(id).exec();
+    }
 
 }

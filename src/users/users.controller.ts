@@ -21,7 +21,7 @@ async me(@CurrentUser('userId') userId: string) {
 
 
   @UseGuards(JwtAuthGuard)
-  @Patch('me')
+  @Patch('update-profile')
   async updateProfile(@CurrentUser() userId:string, @Body() dto: UpdateProfileDto) {
     return this.usersService.updateProfile(userId, dto);
   }
