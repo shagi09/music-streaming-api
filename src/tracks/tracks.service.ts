@@ -24,4 +24,15 @@ export class TracksService {
       return this.trackModel.updateOne({ _id: trackId }, { $inc: { playCount: 1 } });
     }
 
+    // tracks.service.ts
+    async getTrendingTracks(limit = 10) {
+    return this.trackModel.find({
+        order: {
+        playCount: 'DESC',
+        },
+        take: limit,
+    });
+    }
+
+
 }

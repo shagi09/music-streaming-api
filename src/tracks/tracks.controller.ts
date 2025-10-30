@@ -98,5 +98,10 @@ export class TracksController {
     }
   }
 
+  @Get('trending tracks')
+  async getTrendingTracks() {
+    return this.tracksService.getTrendingTracks();
+  }
+
 
 }
