@@ -57,6 +57,8 @@ export class TracksController {
       throw new HttpException('Track not found', HttpStatus.NOT_FOUND);
     }
 
+    this.tracksService.incrementPlayCount(id);
+
     // Construct the full path
     const filePath = join(process.cwd(), track.fileUrl);
 

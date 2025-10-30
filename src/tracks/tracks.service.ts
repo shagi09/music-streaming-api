@@ -20,4 +20,8 @@ export class TracksService {
     return this.trackModel.findById(id).exec();
     }
 
+    async incrementPlayCount(trackId: string) {
+      return this.trackModel.updateOne({ _id: trackId }, { $inc: { playCount: 1 } });
+    }
+
 }

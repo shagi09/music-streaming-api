@@ -31,6 +31,9 @@ export class Track {
   @Prop()
   trackNumber?: number;
 
+  @Prop()
+  playCount?: number;
+
   @Prop() // file location (S3 or internal CDN)
   fileUrl: string;
 
