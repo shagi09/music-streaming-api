@@ -1,4 +1,4 @@
-import { Controller,Get,Param,UseGuards,HttpException,HttpStatus,Req,Res } from '@nestjs/common';
+import { Controller,Get,Param,UseGuards,HttpException,HttpStatus,Req,Res,Query } from '@nestjs/common';
 import { TracksService } from './tracks.service';
 import { ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -101,6 +101,14 @@ export class TracksController {
   @Get('trending tracks')
   async getTrendingTracks() {
     return this.tracksService.getTrendingTracks();
+  }
+
+  @Get('search')
+  async searchTracks(@Query('title') title: string) {
+    if (!title) {
+      throw new HttpException('Title is required', HttpStatus.BAD_REQUEST);
+    }
+    return this.tracksService.searchTracks(title);
   }
 
 

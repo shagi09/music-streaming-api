@@ -34,5 +34,9 @@ export class TracksService {
     });
     }
 
+    async searchTracks(title: string) {
+    return this.trackModel.find({ title: { $regex: title, $options: 'i' } });
+    }
+
 
 }
