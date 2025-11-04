@@ -46,7 +46,7 @@ A NestJS-based REST API for managing, streaming, and tracking music tracks. Feat
 | Authentication | JWT |
 | File Uploads | Multer |
 | Validation | class-validator |
-| Storage | Local disk or AWS S3 |
+| Storage | Local disk |
 
 
 ## Project setup
